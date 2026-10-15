@@ -229,6 +229,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const cinemaTimeTooltip = document.getElementById('cinemaTimeTooltip');
   const cinemaTimeText = document.getElementById('cinemaTimeText');
   const cinemaPlayFeedback = document.getElementById('cinemaPlayFeedback');
+  const cinemaLoader = document.getElementById('cinemaLoader');
+  const cinemaLoaderStatus = document.getElementById('cinemaLoaderStatus');
+  const cinemaLoaderTitle = document.getElementById('cinemaLoaderTitle');
+
+  function showVideoLoader(title, status = 'LOADING VIDEO') {
+    if (!cinemaLoader) return;
+    if (cinemaLoaderStatus) cinemaLoaderStatus.textContent = status;
+    if (cinemaLoaderTitle && title) cinemaLoaderTitle.textContent = title;
+    cinemaLoader.classList.add('is-active');
+  }
+
+  function hideVideoLoader() {
+    if (!cinemaLoader) return;
+    cinemaLoader.classList.remove('is-active');
+  }
 
   let isTimelineScrubbing = false;
   let controlsIdleTimer = null;
@@ -469,11 +484,41 @@ document.addEventListener('DOMContentLoaded', () => {
       if (controlsIdleTimer) clearTimeout(controlsIdleTimer);
     });
 
+    modalVideoPlayer.addEventListener('loadstart', () => {
+      showVideoLoader(modalVideoTitle ? modalVideoTitle.textContent : 'VIDEO', 'LOADING VIDEO');
+    });
+
+    modalVideoPlayer.addEventListener('waiting', () => {
+      showVideoLoader(modalVideoTitle ? modalVideoTitle.textContent : 'VIDEO', 'BUFFERING...');
+    });
+
+    modalVideoPlayer.addEventListener('playing', () => {
+      hideVideoLoader();
+      if (cinemaVideoWrapper) cinemaVideoWrapper.classList.add('has-video-loaded');
+    });
+
+    modalVideoPlayer.addEventListener('canplay', () => {
+      if (modalVideoPlayer.currentTime > 0 || modalVideoPlayer.readyState >= 3) {
+        hideVideoLoader();
+      }
+      if (cinemaVideoWrapper) cinemaVideoWrapper.classList.add('has-video-loaded');
+    });
+
+    modalVideoPlayer.addEventListener('canplaythrough', () => {
+      hideVideoLoader();
+    });
+
+    modalVideoPlayer.addEventListener('error', () => {
+      showVideoLoader('UNABLE TO LOAD VIDEO', 'ERROR');
+      setTimeout(hideVideoLoader, 2500);
+    });
+
     modalVideoPlayer.addEventListener('loadedmetadata', () => {
       const d = getDuration();
       if (cinemaTimeText) {
         cinemaTimeText.textContent = `0:00 / ${formatTime(d)}`;
       }
+      if (cinemaVideoWrapper) cinemaVideoWrapper.classList.add('has-video-loaded');
     });
   }
 
@@ -540,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  function openVideoModal(videoSrc, titleText, metaText) {
+  function openVideoModal(videoSrc, titleText, metaText, aspectType = 'widescreen') {
     if (!videoModal || !modalVideoPlayer) return;
     stopMomentum();
 
@@ -561,6 +606,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modalVideoMeta) {
       modalVideoMeta.textContent = metaText || '';
     }
+
+    // Set wrapper aspect placeholder before video loads
+    if (cinemaVideoWrapper) {
+      cinemaVideoWrapper.classList.remove('has-video-loaded', 'is-vertical', 'is-square', 'is-widescreen');
+      if (aspectType === 'vertical' || aspectType === '9-16') {
+        cinemaVideoWrapper.classList.add('is-vertical');
+      } else if (aspectType === 'square' || aspectType === '1-1') {
+        cinemaVideoWrapper.classList.add('is-square');
+      } else {
+        cinemaVideoWrapper.classList.add('is-widescreen');
+      }
+    }
+
+    // Activate loading screen immediately
+    showVideoLoader(titleText || 'VIDEO SHOWCASE', 'LOADING VIDEO');
 
     modalVideoPlayer.controls = false;
     modalVideoPlayer.loop = true;
@@ -599,6 +659,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isClosingModal = false;
 
   function finalizeModalClose() {
+    hideVideoLoader();
     if (modalVideoPlayer) {
       modalVideoPlayer.pause();
       modalVideoPlayer.currentTime = 0;
@@ -608,7 +669,7 @@ document.addEventListener('DOMContentLoaded', () => {
       controlsIdleTimer = null;
     }
     if (cinemaVideoWrapper) {
-      cinemaVideoWrapper.classList.remove('controls-idle');
+      cinemaVideoWrapper.classList.remove('controls-idle', 'has-video-loaded', 'is-vertical', 'is-square', 'is-widescreen');
     }
     if (cinemaTimelineContainer) {
       cinemaTimelineContainer.classList.remove('is-hovering', 'is-scrubbing');
@@ -712,7 +773,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const titleText = titleEl ? titleEl.textContent.trim() : 'VIDEO SHOWCASE';
       const metaText = metaEl ? metaEl.textContent.trim() : '';
 
-      openVideoModal(videoSrc, titleText, metaText);
+      let aspectType = 'widescreen';
+      if (box.classList.contains('aspect-9-16')) {
+        aspectType = 'vertical';
+      } else if (box.classList.contains('aspect-1-1')) {
+        aspectType = 'square';
+      }
+
+      openVideoModal(videoSrc, titleText, metaText, aspectType);
     }
 
     if (playBtn) {
@@ -761,7 +829,8 @@ document.addEventListener('DOMContentLoaded', () => {
           const workItem = box.closest('article');
           const titleEl = workItem ? workItem.querySelector('.item-title') : null;
           const metaEl = workItem ? workItem.querySelector('.item-meta') : null;
-          openVideoModal(fileUrl, titleEl ? titleEl.textContent.trim() : file.name, metaEl ? metaEl.textContent.trim() : 'Local File Preview');
+          let aspectType = box.classList.contains('aspect-9-16') ? 'vertical' : (box.classList.contains('aspect-1-1') ? 'square' : 'widescreen');
+          openVideoModal(fileUrl, titleEl ? titleEl.textContent.trim() : file.name, metaEl ? metaEl.textContent.trim() : 'Local File Preview', aspectType);
         } else if (file.type.startsWith('image/')) {
           // Update the thumbnail image
           let thumb = box.querySelector('.media-thumb');

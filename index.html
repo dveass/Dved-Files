@@ -437,6 +437,20 @@
       <h3 id="modalVideoTitle" class="sr-only">Video Showcase</h3>
       <p id="modalVideoMeta" class="sr-only"></p>
       <div class="cinema-video-wrapper">
+        <!-- Video Loading Screen Overlay -->
+        <div class="cinema-loader is-active" id="cinemaLoader" aria-live="polite" aria-busy="true">
+          <div class="cinema-loader-card">
+            <div class="cinema-loader-spinner-wrapper">
+              <progress class="loading-spinner cinema-spinner" aria-label="Loading video"></progress>
+              <div class="cinema-loader-pulse" aria-hidden="true"></div>
+            </div>
+            <div class="cinema-loader-info">
+              <span class="cinema-loader-status" id="cinemaLoaderStatus">LOADING VIDEO</span>
+              <p class="cinema-loader-title" id="cinemaLoaderTitle">DVEDFILES</p>
+            </div>
+          </div>
+        </div>
+
         <video id="modalVideoPlayer" loop playsinline preload="auto" oncontextmenu="return false;">
           <source src="assets/video/takeyourmaskoff.mp4" type="video/mp4">
           Your browser does not support HTML5 video.

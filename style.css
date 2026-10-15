@@ -731,6 +731,207 @@ video,
   box-shadow: none !important;
   padding: 0 !important;
   user-select: none;
+  min-width: min(88vw, 560px);
+  min-height: clamp(260px, 48vh, 420px);
+  aspect-ratio: 16 / 9;
+}
+
+.cinema-video-wrapper.is-vertical {
+  min-width: clamp(240px, 34vw, 360px);
+  min-height: clamp(400px, 72vh, 620px);
+  aspect-ratio: 9 / 16;
+}
+
+.cinema-video-wrapper.is-square {
+  min-width: clamp(280px, 45vw, 480px);
+  min-height: clamp(280px, 45vw, 480px);
+  aspect-ratio: 1 / 1;
+}
+
+.cinema-video-wrapper.has-video-loaded {
+  min-width: 0;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+
+/* ========================================================
+   CINEMA VIDEO LOADING SCREEN OVERLAY
+   ======================================================== */
+.cinema-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 28;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 14, 0.86);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.28s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.28s ease;
+  user-select: none;
+}
+
+.cinema-loader.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.cinema-loader-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 24px 30px;
+  border-radius: 12px;
+  background: rgba(20, 20, 26, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65), 0 0 25px rgba(245, 158, 11, 0.08);
+  transform: scale(0.92);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  max-width: 90%;
+  text-align: center;
+}
+
+.cinema-loader.is-active .cinema-loader-card {
+  transform: scale(1);
+}
+
+.cinema-loader-spinner-wrapper {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hide native OS progress elements for indeterminate styling */
+progress.cinema-spinner:indeterminate::-webkit-progress-bar {
+  display: none;
+  background: none;
+}
+progress.cinema-spinner:indeterminate::-webkit-progress-value {
+  display: none;
+  background: none;
+}
+progress.cinema-spinner:indeterminate::-moz-progress-bar {
+  display: none;
+  background: none;
+}
+
+/* Semantic indeterminate spinner */
+progress.cinema-spinner:indeterminate {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  position: relative;
+  background: conic-gradient(from 0deg, #f59e0b 0%, #eab308 60%, rgba(245, 158, 11, 0.05) 92%, transparent 100%);
+  animation: cinemaSpinnerSpin 0.95s linear infinite;
+  mask-image: radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000000 calc(100% - 3px));
+  -webkit-mask-image: radial-gradient(farthest-side, transparent calc(100% - 3.5px), #000000 calc(100% - 3px));
+}
+
+@supports (background-clip: border-area) {
+  progress.cinema-spinner:indeterminate {
+    background-clip: border-area;
+    border: 3.5px solid transparent;
+    background-origin: border-box;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+}
+
+.cinema-loader-pulse {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  animation: cinemaPulseGlow 2.2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  pointer-events: none;
+}
+
+.cinema-loader-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.cinema-loader-status {
+  font-family: var(--font-description, 'Chakra Petch', monospace);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #f59e0b;
+  display: inline-flex;
+  align-items: center;
+  animation: cinemaStatusBlink 1.8s ease-in-out infinite;
+}
+
+.cinema-loader-title {
+  font-family: var(--font-video-title, 'Arimo', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.86);
+  letter-spacing: 0.04em;
+  max-width: 260px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@keyframes cinemaSpinnerSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes cinemaPulseGlow {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.75;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+}
+
+@keyframes cinemaStatusBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  progress.cinema-spinner:indeterminate {
+    animation-duration: 4s;
+  }
+  .cinema-loader-pulse {
+    animation: none;
+    opacity: 0.25;
+  }
+  .cinema-loader-status {
+    animation: none;
+  }
 }
 
 .cinema-video-wrapper video {
