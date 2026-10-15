@@ -230,13 +230,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const cinemaTimeText = document.getElementById('cinemaTimeText');
   const cinemaPlayFeedback = document.getElementById('cinemaPlayFeedback');
   const cinemaLoader = document.getElementById('cinemaLoader');
-  const cinemaLoaderStatus = document.getElementById('cinemaLoaderStatus');
-  const cinemaLoaderTitle = document.getElementById('cinemaLoaderTitle');
 
-  function showVideoLoader(title, status = 'LOADING VIDEO') {
+  function showVideoLoader() {
     if (!cinemaLoader) return;
-    if (cinemaLoaderStatus) cinemaLoaderStatus.textContent = status;
-    if (cinemaLoaderTitle && title) cinemaLoaderTitle.textContent = title;
     cinemaLoader.classList.add('is-active');
   }
 
