@@ -1,0 +1,1253 @@
+/* ========================================================
+   DVEDFILES — PORTFOLIO STYLESHEET
+   Clean, Responsive, Modern CSS
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Arimo:ital,wght@0,400..700;1,400..700&family=Chakra+Petch:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+:root {
+  --color-black: #000000;
+  --color-dark: #111111;
+  --color-white: #ffffff;
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-accent-amber: #eab308;
+  --color-accent-gold: #f59e0b;
+
+  --font-display: 'Archivo Black', 'Syne', sans-serif;
+  --font-heading: 'Syne', 'Archivo Black', sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-video-title: 'Arimo Hebrew Subset', 'Arimo', sans-serif;
+  --font-description: 'Chakra Petch', sans-serif;
+
+  --container-max-width: 860px;
+  --grid-gap: 1.5rem;
+  --section-padding-y: clamp(2.5rem, 5vw, 4.25rem);
+}
+
+/* CSS Reset & Defaults */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  background-color: #131313;
+  color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Hide scrollbar while preserving full scrollability */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Hide scrollbar for WebKit (Chrome, Safari, Edge, Opera) */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  line-height: 1.5;
+  overflow-x: hidden;
+}
+
+/* ========================================================
+   CUSTOM ORANGE CIRCLE CURSOR (REFINED SMALL STYLE)
+   ======================================================== */
+@media (pointer: fine) {
+
+  /* Hide standard system cursor on desktop everywhere */
+  *,
+  *::before,
+  *::after {
+    cursor: none !important;
+  }
+
+  /* Retain standard system cursor only inside dialog inputs/textarea if needed */
+  dialog input,
+  dialog textarea,
+  dialog select {
+    cursor: auto !important;
+    user-select: auto !important;
+  }
+
+  .custom-cursor {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background-color: #ff6a00;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999999;
+    will-change: transform, width, height, border-radius;
+    opacity: 0;
+    box-shadow: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+    transition: width 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+      height 0.15s cubic-bezier(0.25, 1, 0.5, 1),
+      border-radius 0.16s cubic-bezier(0.25, 1, 0.5, 1),
+      background-color 0.15s ease,
+      opacity 0.2s ease;
+  }
+
+  .custom-cursor.visible {
+    opacity: 1;
+  }
+
+  .custom-cursor.hovered {
+    width: 22px;
+    height: 22px;
+    background-color: #ff7d1a;
+    border-radius: 50%;
+  }
+
+  /* Transition circle to crisp square box on click — NO glows, NO drop shadows */
+  .custom-cursor.clicking,
+  .custom-cursor.is-clicked,
+  .custom-cursor:active {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  .custom-cursor.clicking:not(.hovered):not(.dragging),
+  .custom-cursor.is-clicked:not(.hovered):not(.dragging) {
+    width: 12px;
+    height: 12px;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  .custom-cursor.hovered.clicking,
+  .custom-cursor.hovered.is-clicked {
+    width: 16px;
+    height: 16px;
+    border-radius: 0 !important;
+    background-color: #ff6a00;
+    box-shadow: none !important;
+    filter: none !important;
+  }
+
+  /* Compact square box and NO glow when actively dragging the page */
+  .custom-cursor.dragging {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 0 !important;
+    background-color: #ff6a00 !important;
+    box-shadow: none !important;
+    filter: none !important;
+    -webkit-filter: none !important;
+  }
+
+  /* Modal cursor: elevated inside the Top Layer of <dialog> */
+  .modal-cursor {
+    z-index: 99999999 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Page-level drag state & user selection lock - NO hand cursor */
+body.is-dragging,
+body.is-dragging * {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  cursor: none !important;
+  touch-action: none !important;
+}
+
+/* Prevent native image/video dragging and saving */
+img,
+video,
+.media-thumb,
+.hero-banner-img {
+  -webkit-user-drag: none !important;
+  -khtml-user-drag: none !important;
+  -moz-user-drag: none !important;
+  -o-user-drag: none !important;
+  user-drag: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
+}
+
+/* Disable custom cursor on touch devices */
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none !important;
+  }
+}
+
+/* ========================================================
+   HERO HEADER (COMPACT SMALL STYLE)
+   ======================================================== */
+.hero-section {
+  width: 100%;
+  height: calc(100vh - 4px);
+  height: calc(100dvh - 4px);
+  min-height: calc(100vh - 4px);
+  min-height: calc(100dvh - 4px);
+  color: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  padding: 2.25rem 1.25rem 1.75rem;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+  background-color: #000000;
+
+  /* Dark mode chequered pattern (#121212 and #000000) with cinematic vignette */
+  background-image:
+    radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.55) 68%, #000000 100%),
+    url('assets/images/checker-dark.svg');
+  background-repeat: no-repeat, repeat;
+  background-position: center center, 0 0;
+  background-size: 100% 100%, 24px 24px;
+}
+
+.hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1240px;
+  padding: 0.5rem 0;
+}
+
+/* ========================================================
+   HERO REPLACEABLE PHOTO / BANNER STYLES
+   ======================================================== */
+.hero-media-wrapper {
+  width: 100%;
+  max-width: 1240px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.5rem 0;
+  user-select: none;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.hero-banner-img {
+  width: 100%;
+  max-width: min(96vw, 1140px);
+  height: auto;
+  max-height: clamp(240px, 56vh, 520px);
+  object-fit: contain;
+  display: block;
+  margin-inline: auto;
+  user-select: none !important;
+  pointer-events: auto;
+  cursor: pointer;
+  transform: none !important;
+}
+
+/* Scroll Down Prompt Button */
+.scroll-prompt {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-gray-400);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 0.75rem 1rem;
+  transition: color 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.scroll-prompt:hover {
+  color: var(--color-white);
+  transform: translateY(2px);
+}
+
+.scroll-prompt.counting-down {
+  color: var(--color-white);
+}
+
+.scroll-prompt.counting-down .scroll-text {
+  color: var(--color-accent-gold);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.scroll-prompt.counting-down .scroll-chevron {
+  animation: bounceDown 1.1s infinite ease-in-out;
+  color: var(--color-accent-gold);
+}
+
+.scroll-chevron {
+  display: inline-block;
+  animation: bounceDown 2s infinite ease-in-out;
+}
+
+@keyframes bounceDown {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+
+/* ========================================================
+   PORTFOLIO SECTIONS (REFINED SMALL STYLE)
+   ======================================================== */
+.portfolio-section {
+  width: 100%;
+  background-color: #131313;
+  color: var(--color-white);
+  padding: var(--section-padding-y) 1.25rem;
+}
+
+.section-container {
+  width: 100%;
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+}
+
+.section-heading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2.2vw, 1.65rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+  color: var(--color-white);
+  user-select: none;
+}
+
+.section-heading-img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: clamp(26px, 4vw, 44px);
+  object-fit: contain;
+  margin-inline: auto;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  pointer-events: none;
+}
+
+/* ========================================================
+   SECTION 1: MOTION GRAPHICS & VIDEO EDITING ITEMS
+   ======================================================== */
+.work-item {
+  width: 100%;
+  margin-bottom: clamp(1.75rem, 3.5vw, 2.75rem);
+}
+
+.work-item:last-child {
+  margin-bottom: 0;
+}
+
+/* Centered Vertical 9:16 item (Scaled for prominent, balanced display) */
+.vertical-item {
+  width: 100%;
+  max-width: 420px;
+  margin-inline: auto;
+}
+
+/* ========================================================
+   SECTION 2: PERSONAL WORKS (3-COLUMN GRID)
+   ======================================================== */
+.personal-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: var(--grid-gap);
+  row-gap: clamp(1.25rem, 2.5vw, 1.85rem);
+  width: 100%;
+}
+
+.grid-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 7th Item centered at bottom of 3-column grid */
+.grid-item.centered-bottom-item {
+  grid-column: 2;
+  width: 100%;
+  margin-inline: auto;
+}
+
+/* ========================================================
+   MEDIA PLACEHOLDER BOXES
+   ======================================================== */
+.media-box {
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: #0d0d11;
+
+  /* Subtle dark checkered grid backdrop */
+  background-image:
+    linear-gradient(45deg, #16161c 25%, transparent 25%),
+    linear-gradient(-45deg, #16161c 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #16161c 75%),
+    linear-gradient(-45deg, transparent 75%, #16161c 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transform: none !important;
+}
+
+.media-box:hover {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Aspect Ratio Modifiers */
+.aspect-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-9-16 {
+  aspect-ratio: 693 / 979;
+}
+
+.aspect-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+/* ========================================================
+   REPLACEABLE MEDIA THUMBNAIL IMAGES
+   Protected from saving & context menu (NO ZOOM ANIMATION)
+   ======================================================== */
+.media-thumb,
+.media-box>img,
+.media-box>video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: none;
+  display: block;
+  z-index: 2;
+  transition: filter 0.3s ease;
+  transform: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  pointer-events: none;
+  /* Pointer passes directly to media-box container */
+}
+
+.media-box:hover .media-thumb,
+.media-box:hover>img {
+  transform: none !important;
+  filter: brightness(0.92);
+}
+
+/* Graceful fallback if image path is not yet found */
+.media-thumb.img-fallback {
+  display: none;
+}
+
+/* Accessibility Screen-Reader Only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ========================================================
+   MODERN PLAY BUTTON OVERLAY (IMAGE 1: WHITE TRIANGLE ONLY ON CURSOR HOVER)
+   ======================================================== */
+.play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  border: none;
+  background: transparent !important;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+  touch-action: manipulation;
+  cursor: pointer;
+
+  /* Hidden by default; only shows when cursor is pointing/hovering over the video */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+/* Only shows that play button when cursor is pointing to the video */
+.media-box:hover .play-btn,
+.media-box:focus-within .play-btn {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Fallback for touchscreens where mouse hover is not present */
+@media (pointer: coarse) {
+  .play-btn {
+    opacity: 0.92;
+    pointer-events: auto;
+  }
+}
+
+.play-btn-circle {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff !important;
+  transform: none !important;
+}
+
+.play-icon {
+  width: clamp(40px, 4.8vw, 54px);
+  height: clamp(40px, 4.8vw, 54px);
+  fill: #ffffff !important;
+  color: #ffffff !important;
+  filter: none !important;
+  margin-left: 3px;
+  /* optical centering for triangle */
+  transition: opacity 0.15s ease;
+}
+
+.play-btn:hover .play-icon {
+  opacity: 0.88;
+}
+
+/* External Link Overlay Icon */
+.link-icon {
+  width: clamp(34px, 4.2vw, 48px);
+  height: clamp(34px, 4.2vw, 48px);
+  stroke: #ffffff !important;
+  fill: none !important;
+  margin-left: 0 !important;
+}
+
+/* Remove pulsing glow ring */
+.play-pulse-ring {
+  display: none !important;
+}
+
+/* No hover circle backgrounds or borders */
+.media-box:hover .play-btn-circle,
+.play-btn:hover .play-btn-circle,
+.play-btn:focus-visible .play-btn-circle {
+  transform: none !important;
+  background: transparent !important;
+  border: none !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.play-btn:active .play-btn-circle {
+  transform: none !important;
+}
+
+/* ========================================================
+   CINEMA VIDEO MODAL PLAYER (NO OUTLINE, NO DROP SHADOW)
+   ======================================================== */
+.video-cinema-dialog {
+  position: fixed;
+  inset: 0;
+  margin: auto;
+  width: fit-content;
+  max-width: min(92vw, 860px);
+  max-height: 90vh;
+  border: none !important;
+  outline: none !important;
+  border-radius: 8px;
+  background: transparent !important;
+  color: #ffffff;
+  padding: 0 !important;
+  overflow: visible;
+  box-shadow: none !important;
+}
+
+.video-cinema-dialog:focus,
+.video-cinema-dialog:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.video-cinema-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.cinema-dialog-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  max-width: 100%;
+  background: transparent !important;
+  position: relative;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+
+/* Zoom In Popup Animation When Video Opens */
+.video-cinema-dialog[open] .cinema-dialog-content {
+  animation: cinemaPopupZoomIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.video-cinema-dialog[open]::backdrop {
+  animation: cinemaBackdropFadeIn 0.3s ease both;
+}
+
+/* Zoom Out Exit Animation When Closing */
+.video-cinema-dialog.is-closing .cinema-dialog-content {
+  animation: cinemaPopupZoomOut 0.2s cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+.video-cinema-dialog.is-closing::backdrop {
+  animation: cinemaBackdropFadeOut 0.2s ease forwards;
+}
+
+@keyframes cinemaPopupZoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.78);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes cinemaPopupZoomOut {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+@keyframes cinemaBackdropFadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes cinemaBackdropFadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.cinema-video-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000 !important;
+  border-radius: 8px;
+  overflow: hidden;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  user-select: none;
+}
+
+.cinema-video-wrapper video {
+  width: auto;
+  max-width: min(92vw, 860px);
+  max-height: 85vh;
+  object-fit: contain;
+  display: block;
+  background: #000000 !important;
+  border-radius: 8px;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  user-select: none;
+  -webkit-user-drag: none;
+  cursor: pointer;
+}
+
+.cinema-video-wrapper video:focus,
+.cinema-video-wrapper video:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Fullscreen mode support */
+.cinema-video-wrapper:fullscreen,
+.cinema-video-wrapper:-webkit-full-screen {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  border-radius: 0 !important;
+  background: #000000 !important;
+}
+
+.cinema-video-wrapper:fullscreen video,
+.cinema-video-wrapper:-webkit-full-screen video {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  object-fit: contain !important;
+  border-radius: 0 !important;
+}
+
+/* Top-Right Close Button */
+.cinema-close-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 35;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(22, 22, 26, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.22s ease, transform 0.15s ease, background-color 0.18s ease;
+  line-height: 1;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.cinema-close-btn:hover {
+  background: rgba(38, 38, 46, 0.92);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.08);
+}
+
+.cinema-close-btn:active {
+  transform: scale(0.95);
+}
+
+/* Play/Pause Central Feedback Animation */
+.cinema-play-feedback {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(18, 18, 22, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 25;
+  transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.18, 0.89, 0.32, 1.25);
+  box-shadow: none !important;
+}
+
+.cinema-play-feedback.flash {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.cinema-play-feedback .feedback-icon {
+  display: none;
+}
+
+.cinema-play-feedback.show-play .feedback-play {
+  display: block;
+  margin-left: 3px;
+}
+
+.cinema-play-feedback.show-pause .feedback-pause {
+  display: block;
+}
+
+/* Custom Video Controls Overlay (Photo 1 & Photo 2) */
+.cinema-controls {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  z-index: 20;
+  opacity: 1;
+  background: transparent !important;
+  transition: opacity 0.25s ease;
+}
+
+/* Auto-hide controls when idle */
+.cinema-video-wrapper.controls-idle .cinema-controls,
+.cinema-video-wrapper.controls-idle .cinema-close-btn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Bottom Action Row (Fullscreen & Volume Buttons) */
+.cinema-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 14px 10px;
+  pointer-events: auto;
+}
+
+/* Floating Circular Glass Buttons (Photo 1) */
+.cinema-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(22, 22, 26, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  box-shadow: none !important;
+  transition: transform 0.16s ease, background-color 0.18s ease, border-color 0.18s ease;
+  user-select: none;
+}
+
+.cinema-btn:hover {
+  background: rgba(38, 38, 46, 0.92);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.08);
+}
+
+.cinema-btn:active {
+  transform: scale(0.95);
+}
+
+/* Timeline Container at Bottom */
+.cinema-timeline-container {
+  position: relative;
+  width: calc(100% - 24px);
+  margin: 0 auto 10px;
+  padding: 6px 0;
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  touch-action: none;
+}
+
+/* Floating Time Tooltip (Photo 2) */
+.cinema-time-tooltip {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  transform: translateX(-50%);
+  background: rgba(18, 18, 22, 0.94);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  padding: 4px 9px;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.14s ease, visibility 0.14s ease;
+  z-index: 30;
+}
+
+.cinema-timeline-container.is-hovering .cinema-time-tooltip,
+.cinema-timeline-container.is-scrubbing .cinema-time-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Timeline Track */
+.cinema-timeline-track {
+  position: relative;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.28);
+  border-radius: 4px;
+  overflow: hidden;
+  transition: height 0.15s ease;
+}
+
+.cinema-timeline-container:hover .cinema-timeline-track,
+.cinema-timeline-container.is-scrubbing .cinema-timeline-track {
+  height: 6px;
+}
+
+/* Hover preview bar: follows cursor width (Photo 2) */
+.timeline-hover-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: rgba(255, 255, 255, 0.42);
+  border-radius: 4px;
+  pointer-events: none;
+  transition: width 0.04s linear;
+}
+
+/* Played progress bar: solid white (Photo 1 & Photo 2) */
+.timeline-played-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: #ffffff;
+  border-radius: 4px;
+  pointer-events: none;
+  will-change: width;
+  box-shadow: none !important;
+}
+
+/* Hide native browser controls if injected */
+video::-webkit-media-controls {
+  display: none !important;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+}
+
+/* ========================================================
+   CAPTIONS & METADATA (VIDEO NAME: ARIMO, DESC: CHAKRA PETCH)
+   ======================================================== */
+.item-caption {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.08rem;
+  text-align: left;
+}
+
+.caption-centered {
+  text-align: center;
+}
+
+.item-heading-row {
+  display: block;
+  font-family: var(--font-description), 'Chakra Petch', sans-serif;
+  font-size: clamp(0.55rem, 0.66vw, 0.625rem);
+  line-height: 1.35;
+  color: #e5e7eb;
+}
+
+.caption-centered .item-heading-row {
+  text-align: center;
+}
+
+.item-title {
+  display: inline;
+  font-family: var(--font-video-title), 'Arimo Hebrew Subset', 'Arimo', sans-serif !important;
+  font-size: inherit;
+  font-weight: 700;
+  color: var(--color-white) !important;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  margin: 0;
+}
+
+.item-title-link {
+  color: inherit !important;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.item-title-link:hover {
+  opacity: 0.85;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+a.media-box {
+  text-decoration: none;
+  color: inherit;
+}
+
+.item-sep {
+  display: inline;
+  font-family: var(--font-description), 'Chakra Petch', sans-serif;
+  margin: 0 0.25rem;
+  color: var(--color-gray-400);
+}
+
+.item-desc {
+  display: inline;
+  font-family: var(--font-description), 'Chakra Petch', sans-serif !important;
+  font-weight: 400;
+  color: #d1d5db;
+}
+
+.item-meta {
+  font-family: var(--font-description), 'Chakra Petch', sans-serif !important;
+  font-size: clamp(0.5rem, 0.6vw, 0.565rem);
+  color: var(--color-gray-400) !important;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: 0;
+}
+
+.caption-centered .item-meta {
+  text-align: center;
+}
+
+/* ========================================================
+   FOOTER (COMPACT SMALL STYLE)
+   ======================================================== */
+.footer-section {
+  width: 100%;
+  background-color: var(--color-black);
+  color: var(--color-white);
+  padding: 1rem 1rem 1.15rem;
+  text-align: center;
+}
+
+.footer-container {
+  max-width: var(--container-max-width);
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem 0.65rem;
+}
+
+.footer-link {
+  color: var(--color-gray-400);
+  text-decoration: none;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.footer-link:hover {
+  color: var(--color-white);
+}
+
+.footer-sep {
+  color: var(--color-gray-700);
+  font-size: 0.52rem;
+}
+
+.copyright-text {
+  font-size: 0.48rem;
+  color: var(--color-gray-600);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-top: 0.1rem;
+}
+
+/* ========================================================
+   RESPONSIVE BREAKPOINTS (COMPACT SMALL STYLE)
+   ======================================================== */
+@media (max-width: 768px) {
+  :root {
+    --grid-gap: 1.25rem;
+  }
+
+  .hero-brand {
+    gap: 0.6rem;
+  }
+
+  .hero-arrow {
+    width: 48px;
+  }
+
+  /* 2 columns on tablet */
+  .personal-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .grid-item.centered-bottom-item {
+    grid-column: 1 / -1;
+    width: calc(50% - (var(--grid-gap) / 2));
+  }
+
+  .footer-links {
+    gap: 0.25rem 0.55rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .portfolio-section {
+    padding: 2rem 0.85rem;
+  }
+
+  .personal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-item.centered-bottom-item {
+    grid-column: auto;
+    width: 100%;
+  }
+
+  .item-title {
+    font-size: 0.82rem;
+  }
+
+  .item-meta {
+    font-size: 0.68rem;
+  }
+}
+
+/* ========================================================
+   MINECRAFT EASTER EGG ACHIEVEMENT TOAST
+   ======================================================== */
+.minecraft-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999999;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(-140%);
+  transition: transform 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.25), opacity 0.35s ease;
+}
+
+.minecraft-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.minecraft-toast-img {
+  width: 320px;
+  max-width: min(88vw, 320px);
+  height: auto;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+}
+
+@media (max-width: 480px) {
+  .minecraft-toast {
+    top: 12px;
+    right: 12px;
+  }
+
+  .minecraft-toast-img {
+    width: 250px;
+  }
+}
